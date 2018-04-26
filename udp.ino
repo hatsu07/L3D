@@ -9,7 +9,7 @@
 
 char D13value[3];
 CRGB leds[NUM_LEDS];
-Process p;
+Process p;   // シェルコマンドを使うための変数
 
 // L3DCubeのsetup
 void l3dSetup() {
