@@ -10,10 +10,12 @@
 
 CRGB leds[NUM_LEDS];
 
+// 3次元座標からLED番号を返す
 CRGB& led(uint8_t x, uint8_t y, uint8_t z) {
   return leds[y + x*8 + (7-z) * 64];
 }
 
+// 段数によって色を決定
 CRGB setColor(uint8_t y) {
   switch(y) {
     case 0:
@@ -61,7 +63,7 @@ void loop() {
   for (x = 0; x < 8; x++) {
     for (y = 0; y < 8; y++) {
       for (z = 0; z < 8; z++) {
-        if (y + 8 < mic) {
+        if (y + 8 < mic) {  // 音量によって点灯するLEDを決定
           led(x, y, z) = setColor(y);
         } else {
           led(x, y, z) = CRGB(0, 0, 0);
