@@ -38,7 +38,6 @@ CRGB setColor(uint8_t y) {
 }
 
 void setup() {
-  // put your setup code here, to run once:
   pinMode(MIC, INPUT);
   pinMode(X, INPUT);
   pinMode(Y, INPUT);

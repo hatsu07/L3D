@@ -11,6 +11,7 @@ char D13value[3];
 CRGB leds[NUM_LEDS];
 Process p;
 
+// L3DCubeのsetup
 void l3dSetup() {
   pinMode(MIC, INPUT);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
@@ -24,12 +25,12 @@ void setup() {
   memset(D13value, 0, 3);
   leds[0] = CRGB(255, 0, 0);
   FastLED.show();
-  Bridge.begin();
+  Bridge.begin(); // arduinoとlinuxの通信準備
 }
 
 void loop() {
   runPython();
-  Bridge.get("D13", D13value, 3);
+  Bridge.get("D13", D13value, 3); // pythonで保存した値の読み込み
   int D13int = atoi(D13value);
   if (D13int >= 0 && D13int < NUM_LEDS) {
     leds[D13int] = CRGB(255, 255, 0);
@@ -37,6 +38,7 @@ void loop() {
   }
 }
 
+// linuxのpython起動
 void runPython() {
   // p.runShellCommand("/etc/init.d/l3d stop");
   p.runShellCommand("/etc/init.d/l3d start");
