@@ -39,7 +39,6 @@ CRGB setColor(uint8_t y) {
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
   pinMode(MIC, INPUT);
   pinMode(X, INPUT);
   pinMode(Y, INPUT);
@@ -47,7 +46,6 @@ void setup() {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(MAX_BRIGHTNESS);
   FastLED.showColor(CRGB::Black);
-  Serial.println("begin");
 }
 
 void loop() {
@@ -60,11 +58,6 @@ void loop() {
   mic = abs(512 - mic);
 
   mic = mic / 16;
-  Serial.println(mic);
-  // Serial.println(accx);
-  // Serial.print(accx / 100);
-  // Serial.print(accy / 100);
-  // Serial.println(accz / 100);
 
   for (x = 0; x < 8; x++) {
     for (y = 0; y < 8; y++) {
@@ -77,34 +70,6 @@ void loop() {
       }
     }
   }
-
-/*  if (mic > 800) {
-    for (x = 0; x < 8; x++) {
-      for (y = 0; y < 8; y++) {
-        for (z = 0; z < 8; z++) {
-          led(x, y, z) = CRGB(255, 255, 0);
-        }
-      }
-    }
-  }
-  else if (accx % 500 > 10) {
-    for (x = 0; x < 8; x++) {
-      for (y = 0; y < 8; y++) {
-        for (z = 0; z < 8; z++) {
-          led(x, y, z) = CRGB(255, 0, 255);
-        }
-      }
-    }        
-  }
-  else {
-    for (x = 0; x < 8; x++) {
-      for (y = 0; y < 8; y++) {
-        for (z = 0; z < 8; z++) {
-          led(x, y, z) = CRGB(0, 0, 255);
-        }
-      }
-    }    
-  }*/
   FastLED.show();
 }
 
