@@ -1,16 +1,15 @@
 import os
 import sys
-import re
 import socket
 import json
 
 
+# 受信データをdict型に加工
 def preprocessing(data):
     lists = data.split()
     lists.pop(0)
     s = ''.join(lists)
     js = json.loads(s)
-    del js['time']
     return js
 
 def writeValue():
@@ -26,13 +25,13 @@ def writeValue():
     sock.bind((host, port))
 
     while True:
-        data, addr = sock.recvfrom(1024)
+        data, addr = sock.recvfrom(1024)        # データ受信
         js = preprocessing(data)
 
         if 'recog' in js:
-            value.put('v', str(js['recog']))    # 場所'v'にstr(js['recog'])を保存
+            value.put('v', str(js['recog']))    # 領域'v'に値str(js['recog'])を保存
         if 'val' in js:
-            value.put('v', str(js['val']))
+            value.put('v', str(js['val']))      # 保存できる値は文字列のみの仕様らしい
         if 'num' in js:
             value.put('n', str(js['num']))
 

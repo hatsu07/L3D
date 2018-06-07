@@ -37,95 +37,29 @@ void setup() {
 }
 
 void loop() {
-  Bridge.get("v", cval, BUFLEN);
-
+  Bridge.get("v", cval, BUFLEN);  // 手の追跡データのread
   uint8_t val = atoi(cval);
 
   if (oldval == val) {
+    // 一定時間経ったら待機モードに
     if (count > Threshold) {
-      Bridge.get("n", cval, BUFLEN);
-      int num = atoi(cval);
+      Bridge.get("n", cval, BUFLEN);  // 人数データのread
+      uint8_t num = atoi(cval);
 
       if (num > 0) {
+        // 1人以上認識していれば人数表示
         drawNumber(num);
       } else {
+        // 0人 かつ 手の追跡なし ならば ランダムにアニメーション
         val = random(1, 5);
         if (val == 1) {
-          for (uint8_t x = 0; x < 8; x++) {
-            for (uint8_t y = 0; y < 8; y++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, y, z) = CRGB(255, 0, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
-          for (uint8_t x = 0; x < 8; x++) {
-            for (uint8_t y = 0; y < 8; y++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, y, z) = CRGB(0, 0, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
+          redRight();
         } else if (val == 2) {
-          for (uint8_t x = 0; x < 8; x++) {
-            for (uint8_t y = 0; y < 8; y++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(7 - x, y, z) = CRGB(0, 255, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
-          for (uint8_t x = 0; x < 8; x++) {
-            for (uint8_t y = 0; y < 8; y++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(7 - x, y, z) = CRGB(0, 0, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
+          greenLeft();
         } else if (val == 3) {
-          for (uint8_t y = 0; y < 8; y++) {
-            for (uint8_t x = 0; x < 8; x++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, y, z) = CRGB(0, 0, 255);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
-          for (uint8_t y = 0; y < 8; y++) {
-            for (uint8_t x = 0; x < 8; x++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, y, z) = CRGB(0, 0, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
+          blueDown();
         } else if (val == 4) {
-          for (uint8_t y = 0; y < 8; y++) {
-            for (uint8_t x = 0; x < 8; x++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, 7 - y, z) = CRGB(255, 255, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
-          for (uint8_t y = 0; y < 8; y++) {
-            for (uint8_t x = 0; x < 8; x++) {
-              for (uint8_t z = 0; z < 8; z++) {
-                led(x, 7 - y, z) = CRGB(0, 0, 0);
-              }
-            }
-            FastLED.show();
-            delay(50);
-          }
+          yellowUp();
         } else {
           for (uint8_t y = 0; y < 8; y++) {
             for (uint8_t x = 0; x < 8; x++) {
@@ -144,25 +78,52 @@ void loop() {
   } else {
     count = 0;
     if (val == 1) {
-      for (uint8_t x = 0; x < 8; x++) {
-        for (uint8_t y = 0; y < 8; y++) {
-          for (uint8_t z = 0; z < 8; z++) {
-            led(x, y, z) = CRGB(255, 0, 0);
-          }
-        }
-        FastLED.show();
-        delay(50);
-      }
-      for (uint8_t x = 0; x < 8; x++) {
-        for (uint8_t y = 0; y < 8; y++) {
-          for (uint8_t z = 0; z < 8; z++) {
-            led(x, y, z) = CRGB(0, 0, 0);
-          }
-        }
-        FastLED.show();
-        delay(50);
-      }
+      redRight();
     } else if (val == 2) {
+      greenLeft();
+    } else if (val == 3) {
+      blueDown();
+    } else if (val == 4) {
+      yellowUp();
+    } else if (val == 5) {
+      // 手の認識開始
+      for (uint8_t x = 0; x < 8; x++) {
+        for (uint8_t y = 0; y < 8; y++) {
+          for (uint8_t z = 0; z < 8; z++) {
+            led(x, y, z) = CRGB(255, 255, 255);
+          }
+        }
+      }
+      FastLED.show();
+    }
+    oldval = val;
+  }
+}
+
+void redRight() {
+  // 赤で→にアニメーション
+  for (uint8_t x = 0; x < 8; x++) {
+    for (uint8_t y = 0; y < 8; y++) {
+      for (uint8_t z = 0; z < 8; z++) {
+        led(x, y, z) = CRGB(255, 0, 0);
+      }
+    }
+    FastLED.show();
+    delay(50);
+  }
+  for (uint8_t x = 0; x < 8; x++) {
+    for (uint8_t y = 0; y < 8; y++) {
+      for (uint8_t z = 0; z < 8; z++) {
+        led(x, y, z) = CRGB(0, 0, 0);
+      }
+    }
+    FastLED.show();
+    delay(50);
+  }
+}
+
+void greenLeft() {
+      // 緑で←にアニメーション
       for (uint8_t x = 0; x < 8; x++) {
         for (uint8_t y = 0; y < 8; y++) {
           for (uint8_t z = 0; z < 8; z++) {
@@ -181,7 +142,10 @@ void loop() {
         FastLED.show();
         delay(50);
       }
-    } else if (val == 3) {
+}
+
+void blueDown() {
+      // 青で↓にアニメーション
       for (uint8_t y = 0; y < 8; y++) {
         for (uint8_t x = 0; x < 8; x++) {
           for (uint8_t z = 0; z < 8; z++) {
@@ -200,7 +164,10 @@ void loop() {
         FastLED.show();
         delay(50);
       }
-    } else if (val == 4) {
+}
+
+void yellowUp() {
+      // 黄で↑にアニメーション
       for (uint8_t y = 0; y < 8; y++) {
         for (uint8_t x = 0; x < 8; x++) {
           for (uint8_t z = 0; z < 8; z++) {
@@ -219,18 +186,6 @@ void loop() {
         FastLED.show();
         delay(50);
       }
-    } else if (val == 5) {
-      for (uint8_t x = 0; x < 8; x++) {
-        for (uint8_t y = 0; y < 8; y++) {
-          for (uint8_t z = 0; z < 8; z++) {
-            led(x, y, z) = CRGB(255, 255, 255);
-          }
-        }
-      }
-      FastLED.show();
-    }
-    oldval = val;
-  }
 }
 
 // 3次元座標からLED番号を返す
@@ -281,6 +236,7 @@ void drawNumber(uint8_t n) {
   FastLED.show();
 }
 
+// linux上のpythonを起動
 void runPython() {
   Process p;
   p.runShellCommand("sh /mnt/runPython.sh");
