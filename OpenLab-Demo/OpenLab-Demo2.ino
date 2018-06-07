@@ -283,6 +283,6 @@ void drawNumber(uint8_t n) {
 
 void runPython() {
   Process p;
-  p.runShellCommand("sh /mnt/receive.sh");
+  p.runShellCommand("sh /mnt/runPython.sh");
 }
 
